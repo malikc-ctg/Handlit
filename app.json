@@ -37,6 +37,10 @@
           "color": "#7C3AED"
         }
       ]
-    ]
+    ],
+    "web": {
+      "bundler": "metro",
+      "output": "static"
+    }
   }
 }

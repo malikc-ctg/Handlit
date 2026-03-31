@@ -7,6 +7,7 @@ import { useUserStore } from '../stores/useUserStore';
 import { calculateStreakOnLaunch, getTodayString } from '../lib/streak';
 import { setupNotificationChannel } from '../lib/notifications';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Colors } from '../lib/theme';
 
 export default function RootLayout() {
@@ -50,8 +51,11 @@ export default function RootLayout() {
       // Load tasks with the (potentially corrected) streak
       await loadTasks(correctedStreak);
 
-      // Route to onboarding or home
-      if (!userState.onboarding_complete) {
+      // Route to warmup, onboarding, or home
+      const warmupFlag = await AsyncStorage.getItem('hasCompletedWarmup');
+      if (warmupFlag !== 'true') {
+        router.replace('/warmup');
+      } else if (!userState.onboarding_complete) {
         router.replace('/onboarding');
       } else {
         router.replace('/(tabs)');
